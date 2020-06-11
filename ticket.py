@@ -81,15 +81,15 @@ class Ticket:
         return re.findall("{(.*?)}", self.description)
 
 
-def addattachment(filename, ticketnumber):
-    path = os.path.dirname(os.path.realpath(__file__)) + "\\attachments\\" + filename
+def addattachment(filepath, ticketnumber):
+    path = os.path.dirname(os.path.realpath(__file__)) + "\\attachments\\" + filepath
     filesize = os.path.getsize(path)
 
     with open(path, "rb") as attachment:
-        calls.addattachment(attachment.read(), filename, ticketnumber, filesize)
+        calls.addattachment(attachment.read(), filepath, ticketnumber, filesize)
 
 
-def getfieldnames():
+def getallfieldnames():
     fields = calls.gettemplate()['fields']
     names = []
     for field in fields:
