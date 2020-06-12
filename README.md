@@ -62,3 +62,10 @@ filled in with your values:
 - `clientID = ""`
 - `password = ""`
 - `url = ""`
+
+###**Tasks**
+- [ ] Implement 'delete' call in call class
+- [ ] Add function to delete ticket given a ticket number
+- [ ] Add unit tests
+- [ ] Add file to store created tickets -> ticket number and fields filled in
+- [ ] Add function decorators

@@ -52,6 +52,10 @@ def createticket(fields):
 
     return requests.post(config.url + 'api/V1/savebusinessobject', data=json.dumps(payload), headers=auth_header).json()
 
+# TODO implement
+def deleteticket(publicid):
+    pass
+
 
 def addattachment(body, filename, publicid, totalsize):
     token = gettoken()

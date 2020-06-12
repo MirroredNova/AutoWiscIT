@@ -73,6 +73,10 @@ class Ticket:
             print("A ticket has been created -> TicketNumber: " + data["busObPublicId"])
             return self.record
 
+    # TODO implement
+    def deleteticket(self):
+        pass
+
     def setattachment(self, filepath):
         self.attachmentpath = filepath
 
