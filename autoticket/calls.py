@@ -1,6 +1,6 @@
 import json
 
-import config
+from autoticket import config
 import requests
 
 

@@ -1,4 +1,4 @@
-# AutoWiscIT
+# Autoticket
 
 ###**Description:**  
 Allows for automated created of Cherwell tickets using methods from the ticket class.  
@@ -18,12 +18,12 @@ Static Methods:
 4. `getfieldsfordescriptiontemplate(template)` - Takes a `template` string and returns the fields
 
 
-###**Instanciating:**  
+###**Instantiating:**  
 To create a new Ticket, you must pass in a template so that the ticket type and template can be loaded
 
-###**Attachments Folder:**  
-This folder is where attachments can be put, and then added to a ticket either by calling the static method or adding
-the attachment through each object. 
+###**Attachments:**  
+Attachments can be added to the tickets. Just call `setattachment(self, filepath)` and provide a full filepath to the
+attachment. Otherwise, it can be referenced through a relative path from the running script. 
 
 ###**Templates Folder:**  
 This is where templates will go. The template can be pasted as normal, but any fields that you want to be able to set
@@ -51,4 +51,14 @@ ticketfields = {
      }
 ```
 Note: Description is required, however it **SHOULD NOT** be set through the ticket fields. It should instead be set
-through `Ticket.setdescriptionfields(fields)`  
+through `setdescriptionfields(fields)`  
+
+The field names can be retrieved by using `getallfieldnames()` and looking through the list to find what you need.
+
+###**Config File**
+To use, you must create a `config.py` file in the autoticket folder that contains the fields with the quotes 
+filled in with your values:
+- `username = ""`
+- `clientID = ""`
+- `password = ""`
+- `url = ""`

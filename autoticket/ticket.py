@@ -1,7 +1,7 @@
 import os
 import re
 
-import calls
+from autoticket import calls
 
 
 class BadTemplateException(Exception):
@@ -59,6 +59,7 @@ class Ticket:
                 "errorMessage": data["errorMessage"],
                 "fieldValidationErrors": data["fieldValidationErrors"]
             }
+            print("A ticket has not been created -> ErrorMessage: " + data["errorMessage"])
             return self.errors
         else:
             self.record = {
@@ -69,6 +70,7 @@ class Ticket:
             if self.attachmentpath is not None:
                 addattachment(self.attachmentpath, data["busObPublicId"])
 
+            print("A ticket has been created -> TicketNumber: " + data["busObPublicId"])
             return self.record
 
     def setattachment(self, filepath):
@@ -82,10 +84,9 @@ class Ticket:
 
 
 def addattachment(filepath, ticketnumber):
-    path = os.path.dirname(os.path.realpath(__file__)) + "\\attachments\\" + filepath
-    filesize = os.path.getsize(path)
+    filesize = os.path.getsize(filepath)
 
-    with open(path, "rb") as attachment:
+    with open(filepath, "rb") as attachment:
         calls.addattachment(attachment.read(), filepath, ticketnumber, filesize)
 
 
