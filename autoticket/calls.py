@@ -3,6 +3,8 @@ import json
 from autoticket import config
 import requests
 
+busObId = '6dd53665c0c24cab86870a21cf6434ae'
+
 
 def gettoken():
     payload = {'grant_type': 'password',
@@ -24,7 +26,7 @@ def gettemplate():
                    'Authorization': 'Bearer ' + token}
 
     payload = {
-        'busObId': '6dd53665c0c24cab86870a21cf6434ae',
+        'busObId': busObId,
         'includeAll': 'true',
         'includeRequired': 'true'
     }
@@ -36,7 +38,7 @@ def createticket(fields):
     token = gettoken()
 
     payload = {
-        "busObId": "6dd53665c0c24cab86870a21cf6434ae",
+        "busObId": busObId,
         "busObPublicId": "",
         "busObRecId": "",
         "cacheKey": "",
@@ -52,14 +54,21 @@ def createticket(fields):
 
     return requests.post(config.url + 'api/V1/savebusinessobject', data=json.dumps(payload), headers=auth_header).json()
 
-# TODO implement
-def deleteticket(publicid):
-    pass
+
+def getticket(publicid):
+    token = gettoken()
+
+    auth_header = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+    }
+
+    return requests.get(config.url + '/api/V1/getbusinessobject/busobid/' + busObId + '/publicid/' + publicid,
+                        headers=auth_header).json()
 
 
 def addattachment(body, filename, publicid, totalsize):
     token = gettoken()
-    busobid = "6dd53665c0c24cab86870a21cf6434ae"
 
     auth_header = {
         'Accept': 'application/json',
@@ -68,5 +77,5 @@ def addattachment(body, filename, publicid, totalsize):
     }
 
     return requests.post(config.url + '/api/V1/uploadbusinessobjectattachment/filename/' + filename +
-                         '/busobid/' + str(busobid) + '/publicid/' + str(publicid) +
+                         '/busobid/' + str(busObId) + '/publicid/' + str(publicid) +
                          '/offset/' + str(0) + '/totalsize/' + str(totalsize), data=body, headers=auth_header)

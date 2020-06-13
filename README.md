@@ -64,8 +64,8 @@ filled in with your values:
 - `url = ""`
 
 ###**Tasks**
-- [ ] Implement 'delete' call in call class
-- [ ] Add function to delete ticket given a ticket number
+- [ ] Implement 'search' call in call class
 - [ ] Add unit tests
 - [ ] Add file to store created tickets -> ticket number and fields filled in
 - [ ] Add function decorators
+- [ ] Search ticket feature (by ticket number and parse for specific fields)

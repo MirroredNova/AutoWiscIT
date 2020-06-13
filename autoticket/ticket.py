@@ -8,18 +8,9 @@ class BadTemplateException(Exception):
     pass
 
 
-"""
-flow -> create Object and pass template
-        set description fields
-        set ticket fields
-        create ticket
-        creation will return either ticket data or error data
-"""
-
-
 class Ticket:
 
-    def __init__(self, template):
+    def __init__(self, template: str):
         self.tickettemplate = calls.gettemplate()['fields']  # ticket fields to be filled in
         self.descriptiontemplatetype = template  # type of ticket
         self.record = None  # once created -> id and record number
@@ -37,21 +28,21 @@ class Ticket:
 
         self.setticketfields({"Description": self.description})
 
-    def setdescriptionfields(self, fields):
+    def setdescriptionfields(self, fields: dict):
         for key in fields.keys():
             if "{" + key + "}" in self.description:
                 self.description = self.description.replace("{" + key + "}", fields.get(key))
 
         self.setticketfields({"Description": self.description})
 
-    def setticketfields(self, ticketfields):
+    def setticketfields(self, ticketfields: dict):
         for key in ticketfields.keys():
             for i in range(0, len(self.tickettemplate)):
                 if self.tickettemplate[i]["name"].strip().lower() == key.strip().lower():
                     self.tickettemplate[i]["value"] = ticketfields[key]
                     self.tickettemplate[i]["dirty"] = True
 
-    def createticket(self):
+    def createticket(self) -> dict:
         data = calls.createticket(self.tickettemplate)
         if data["hasError"]:
             self.errors = {
@@ -73,28 +64,36 @@ class Ticket:
             print("A ticket has been created -> TicketNumber: " + data["busObPublicId"])
             return self.record
 
-    # TODO implement
-    def deleteticket(self):
-        pass
-
-    def setattachment(self, filepath):
+    def setattachment(self, filepath: str):
         self.attachmentpath = filepath
 
-    def getalldescriptionfields(self):
+    def getalldescriptionfields(self) -> list:
         return re.findall("{(.*?)}", self.descriptiontemplate)
 
-    def getunsetdescriptionfields(self):
+    def getunsetdescriptionfields(self) -> list:
         return re.findall("{(.*?)}", self.description)
 
+    def getcreatedticketfield(self, name: str) -> str:
+        fields = getcreatedticketfields(self.record["ticketnumber"])
+        for field in fields:
+            if field["name"] == name:
+                return field["value"]
 
-def addattachment(filepath, ticketnumber):
+    def created(self) -> bool:
+        if self.record is None:
+            return False
+        else:
+            return True
+
+
+def addattachment(filepath: str, ticketnumber: str):
     filesize = os.path.getsize(filepath)
 
     with open(filepath, "rb") as attachment:
         calls.addattachment(attachment.read(), filepath, ticketnumber, filesize)
 
 
-def getallfieldnames():
+def getallfieldnames() -> list:
     fields = calls.gettemplate()['fields']
     names = []
     for field in fields:
@@ -103,13 +102,37 @@ def getallfieldnames():
     return names
 
 
-def gettemplates():
+def getfullcreatedticket(ticketnumber: str) -> dict:
+    if not ticketnumber or ticketnumber is None:
+        return {'busObId': None, 'fields': []}
+    return calls.getticket(ticketnumber)
+
+
+def getcreatedticketfields(ticketnumber: str) -> list:
+    ticketfields = getfullcreatedticket(ticketnumber)["fields"]
+    fields = []
+    for i in range(len(ticketfields)):
+        if ticketfields[i]['value']:
+            fields.append(ticketfields[i])
+
+    return fields
+
+
+def ticketexists(ticketnumber: str) -> bool:
+    response = getfullcreatedticket(ticketnumber)
+    if response['busObId'] is not None:
+        return True
+    else:
+        return False
+
+
+def gettemplates() -> list:
     return os.listdir(os.path.dirname(os.path.realpath(__file__)) + "\\templates")
 
 
-def getfieldsfordescriptiontemplate(template):
+def getfieldsfordescriptiontemplate(template: str) -> list:
     template = template.strip().lower()
-    if template not in gettemplates():
+    if template + '.txt' not in gettemplates():
         raise BadTemplateException("The template: " + template + " does not exist.")
 
     with open(os.path.dirname(os.path.realpath(__file__)) + "\\templates\\" + template + ".txt") as templateFile:
