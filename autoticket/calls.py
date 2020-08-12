@@ -52,6 +52,7 @@ def createticket(fields):
         'Authorization': 'Bearer ' + token
     }
 
+    # have default fields that havent been set
     return requests.post(config.url + 'api/V1/savebusinessobject', data=json.dumps(payload), headers=auth_header).json()
 
 

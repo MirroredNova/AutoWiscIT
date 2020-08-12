@@ -8,6 +8,7 @@ class BadTemplateException(Exception):
     pass
 
 
+# CLASS AND CLASS FUNCTIONS
 class Ticket:
 
     def __init__(self, template: str):
@@ -86,6 +87,7 @@ class Ticket:
             return True
 
 
+# STATIC FUNCTIONS
 def addattachment(filepath: str, ticketnumber: str):
     filesize = os.path.getsize(filepath)
 
@@ -118,6 +120,7 @@ def getcreatedticketfields(ticketnumber: str) -> list:
     return fields
 
 
+# serach by timeframe and find past tickets
 def ticketexists(ticketnumber: str) -> bool:
     response = getfullcreatedticket(ticketnumber)
     if response['busObId'] is not None:
